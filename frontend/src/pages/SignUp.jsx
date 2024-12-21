@@ -82,7 +82,7 @@ const SignUp = () => {
                 <input
                   type="file"
                   className="'hidden"
-                  onChange={handleUploadPic()}
+                  onChange={handleUploadPic}
                 />
               </label>
             </form>
