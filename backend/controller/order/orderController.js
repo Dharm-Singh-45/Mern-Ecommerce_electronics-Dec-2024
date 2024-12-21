@@ -4,10 +4,10 @@ const orderController = async (req, res) => {
   try {
     const currentUserId = req?.user?.data?._id;
 
-    const orrderList = await OrderModel.find({ userId: currentUserId }).sort({createdAt : -1});
+    const orderList = await OrderModel.find({ userId: currentUserId }).sort({createdAt : -1});
 
     res.json({
-      data: orrderList,
+      data: orderList,
       message: "order list",
       succcess: true,
       error: false,

@@ -16,12 +16,7 @@ const Cart = () => {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/viewCartProduct", {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await api.get("/viewCartProduct");
       setData(response?.data?.data || []);
     } catch (error) {
       toast(error?.response?.data?.message || "Failed to fetch cart data");
@@ -43,12 +38,7 @@ const Cart = () => {
       const response = await api.post(
         "/update-cart-product",
         { quantity: qty + 1, _id: id },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
+     
       );
       fetchData();
     } catch (error) {
@@ -62,12 +52,7 @@ const Cart = () => {
         const response = await api.post(
           "/update-cart-product",
           { quantity: qty - 1, _id: id },
-          {
-            withCredentials: true,
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
+        
         );
         fetchData();
       } catch (error) {
@@ -81,12 +66,6 @@ const Cart = () => {
       const response = await api.post(
         "/delete-cart-product",
         { _id: id },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
       );
       fetchData();
       context.fetchUserAddToCart();
@@ -110,12 +89,7 @@ const Cart = () => {
       const response = await api.post(
         "/checkout",
         { cartItems: data },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        
       );
 
       if (response.data.session.id) {

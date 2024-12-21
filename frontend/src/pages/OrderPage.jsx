@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../common/api"; // Importing the centralized API client
 import moment from "moment";
 import displayINRCurrency from "../helpers/displayCurrency";
+import { toast } from "react-toastify";
 
 const OrderPage = () => {
   const [data, setData] = useState([]);
@@ -10,9 +11,10 @@ const OrderPage = () => {
     try {
       const response = await api.get("/order-list"); // Using the centralized API client
 
+
       setData(response?.data?.data);
     } catch (error) {
-      console.log("error from order page", error.message);
+      toast(error?.response?.data?.message);
     }
   };
 
