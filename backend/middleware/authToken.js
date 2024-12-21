@@ -7,7 +7,7 @@ const authToken = (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        message: 'Access Denied: No token provided',
+        message: 'Please Login First',
         error: true,
         success: false,
         data: [],

@@ -19,6 +19,9 @@ import updateAddToCartController from "../controller/user/updateAddToCartProduct
 import deleteAddToCartProduct from "../controller/user/deleteAddTpCartProduct.js";
 import searchProductController from "../controller/product/searchProduct.js";
 import fiterProductController from "../controller/product/filterProduct.js";
+import paymentController from "../controller/order/paymentController.js";
+import webhooks from "../controller/order/webhooks.js";
+import orderController from "../controller/order/orderController.js";
 
 const router = express.Router();
 
@@ -54,6 +57,16 @@ router.get('/countAddToProduct',authToken,countAddToCartProductController)
 router.get('/viewCartProduct',authToken,addToCartViewProduct)
 router.post('/update-cart-product',authToken,updateAddToCartController)
 router.post('/delete-cart-product',authToken,deleteAddToCartProduct)
+
+
+/* paymetn and order */
+
+router.post('/checkout',authToken,paymentController)
+
+router.post("/webhook",webhooks)   // api webhook 
+
+router.get("/order-list",authToken,orderController)
+
 
 
 export default router;

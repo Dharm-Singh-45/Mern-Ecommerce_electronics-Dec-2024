@@ -110,6 +110,10 @@ const searchQuery = urlSearch.getAll("q")
                       Admin Panel
                     </Link>
                   )}
+                  <Link to={"/order"} 
+                   className="whitespace-nowrap hidden md:block hover:text-red-500"
+                   onClick={() => setMenuDisplay((prev) => !prev)}
+                   >Order</Link>
                 </nav>
               </div>
             )}
