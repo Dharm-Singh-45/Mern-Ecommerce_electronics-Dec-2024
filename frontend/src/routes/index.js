@@ -1,21 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
-import { App } from "../app";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import ForgotPassword from "../pages/ForgotPassword";
-import SignUp from "../pages/SignUp";
-import AdminPandel from "../pages/AdminPandel";
+import { App } from "../app.jsx";
+import Home from "../pages/Home.jsx";
+import Login from "../pages/Login.jsx";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
+import SignUp from "../pages/SignUp.jsx";
+import AdminPandel from "../pages/AdminPandel.jsx";
 
-import AllProducts from "../pages/AllProducts";
-import AllUsers from "../pages/AllUSers";
-import CategoryProduct from "../pages/CategoryProduct";
-import ProductDetails from "../pages/ProductDetails";
-import Cart from "../pages/Cart";
-import SearchProduct from "../pages/SearchProduct";
-import Success from "../pages/Success";
-import Cancel from "../pages/Cancel";
-import OrderPage from "../pages/OrderPage";
-import AllOrder from "../pages/AllOrder";
+import AllProducts from "../pages/AllProducts.jsx";
+import AllUsers from "../pages/AllUsers.jsx";
+import CategoryProduct from "../pages/CategoryProduct.jsx";
+import ProductDetails from "../pages/ProductDetails.jsx";
+import Cart from "../pages/Cart.jsx";
+import SearchProduct from "../pages/SearchProduct.jsx";
+import Success from "../pages/Success.jsx";
+import Cancel from "../pages/Cancel.jsx";
+import OrderPage from "../pages/OrderPage.jsx";
+import AllOrder from "../pages/AllOrder.jsx";
 
 const router = createBrowserRouter([
   {
