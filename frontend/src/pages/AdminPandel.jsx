@@ -46,6 +46,12 @@ const AdminPandel = () => {
             >
               All Products
             </Link>
+            <Link
+              to={"all-order"}
+              className="px-2 py-1 hover:text-red-500 Products"
+            >
+              All Orders
+            </Link>
           </nav>
         </div>
       </aside>

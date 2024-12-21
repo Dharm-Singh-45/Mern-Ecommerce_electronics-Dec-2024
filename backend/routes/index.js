@@ -22,6 +22,7 @@ import fiterProductController from "../controller/product/filterProduct.js";
 import paymentController from "../controller/order/paymentController.js";
 import webhooks from "../controller/order/webhooks.js";
 import orderController from "../controller/order/orderController.js";
+import allOrdersController from "../controller/order/allOrderController.js";
 
 const router = express.Router();
 
@@ -66,6 +67,8 @@ router.post('/checkout',authToken,paymentController)
 router.post("/webhook",webhooks)   // api webhook 
 
 router.get("/order-list",authToken,orderController)
+
+router.get("/all-order",authToken,allOrdersController)
 
 
 

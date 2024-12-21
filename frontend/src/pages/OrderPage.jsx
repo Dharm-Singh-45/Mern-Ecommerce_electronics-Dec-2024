@@ -23,10 +23,10 @@ const OrderPage = () => {
   }, []);
 
   return (
-    <div className="p-4 w-full">
+    <div className="">
       {!data[0] && <p>No Order Available</p>}
 
-      <div>
+      <div className="p-4 w-full">
         {data.map((item, index) => {
           return (
             <div key={`${index} + order`}>
