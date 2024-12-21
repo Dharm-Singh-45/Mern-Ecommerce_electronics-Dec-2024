@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../common/api";  // Import the centralized api instance
 import { toast } from "react-toastify";
 
 const addToCart = async (e, id) => {
@@ -6,23 +6,19 @@ const addToCart = async (e, id) => {
   e?.preventDefault();
 
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/addtocart",
+    const response = await api.post(
+      "/addtocart",  // Use the endpoint relative to the base URL
       {
-        productId : id,
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        productId: id,
       }
     );
-   
-    toast(response?.data?.message)
 
-    return response?.data
+    toast(response?.data?.message);  // Show success message from response
+
+    return response?.data;  // Return the response data if needed
 
   } catch (error) {
-    toast(error?.response?.data?.message)
+    toast(error?.response?.data?.message || "An unexpected error occurred.");  // Handle error and show message
   }
 };
 

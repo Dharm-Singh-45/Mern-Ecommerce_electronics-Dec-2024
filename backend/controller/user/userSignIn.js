@@ -6,10 +6,7 @@ const userSignInController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-  
-
-    // validation
-
+    // Validation
     if (!email || !password) {
       return res.status(400).json({
         message: "Fill all fields",
@@ -17,50 +14,43 @@ const userSignInController = async (req, res) => {
         success: false,
       });
     }
-    // user exist or not
 
+    // Check if user exists
     const user = await UserModel.findOne({ email });
-
     if (!user) {
       return res.status(400).json({
         message: "User not found",
         error: true,
-        sucess: false,
+        success: false,
       });
     }
 
+    // Validate password
     const checkPassword = await bcrypt.compare(password, user.password);
-
-    if (checkPassword) {
-      const tokenData = {
-        _id: user._id,
-        email: user.email,
-      };
-      const token = await jwt.sign(
-        {
-          data: tokenData,
-        },
-        process.env.TOKEN_SECRET_KEY,
-        { expiresIn: 60 * 60 * 8 }
-      );
-      const tokenOption = {
-        httpOnly:true,
-        secure:true
-      }
-
-      res.status(200).cookie("token",token,tokenOption).json({
-        message: "login successfuly",
-        data: token,
-        error: false,
-        success: true,
-      });
-    } else {
-      res.status(400).json({
-        message: "password not correct",
+    if (!checkPassword) {
+      return res.status(400).json({
+        message: "Password is incorrect",
         error: true,
         success: false,
       });
     }
+
+    // Generate JWT token
+    const tokenData = { _id: user._id, email: user.email };
+    const token = jwt.sign(
+      { data: tokenData },
+      process.env.TOKEN_SECRET_KEY,
+      { expiresIn: "8h" }
+    );
+
+    // Send response with token
+    res.status(200).json({
+      message: "Login successful",
+      token, // Include token in response
+      user: { _id: user._id, email: user.email }, // Optional: include user data
+      error: false,
+      success: true,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message || "Something went wrong",

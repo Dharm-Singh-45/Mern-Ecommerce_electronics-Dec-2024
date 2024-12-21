@@ -5,55 +5,49 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice";
 import ROLE from "../common/role";
 import Context from "../context";
+import api from "../common/api"; // Import the custom Axios instance
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
 
   const context = useContext(Context);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const searchInput = useLocation()
+  const searchInput = useLocation();
+  const urlSearch = new URLSearchParams(searchInput?.search);
+  const searchQuery = urlSearch.getAll("q");
 
-  const urlSearch = new URLSearchParams(searchInput?.search)
-const searchQuery = urlSearch.getAll("q")
-
-  const [search,setSearch] = useState(searchQuery)
-  
-
+  const [search, setSearch] = useState(searchQuery);
   const [menuDisplay, setMenuDisplay] = useState(false);
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/user-logout",
-        { withCredentials: true }
-      );
-
+      const response = await api.get("/user-logout"); // Use the `api` instance
       toast(response.data.message);
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
       dispatch(setUserDetails(null));
-      navigate('/')
+      navigate("/");
     } catch (error) {
-      toast(error.response?.data.message);
+      toast(error.response?.data?.message || "Failed to logout.");
     }
   };
 
-  const handleSearch = (e) =>{
-    const {value} = e.target
-    setSearch(value)
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearch(value);
 
-    if(value){
-      navigate(`/search?q=${value}`)
-    }else{
-      navigate('/search')
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/search");
     }
-
-  }
+  };
 
   return (
     <header className="h-16 shadow-md bg-white fixed w-full z-40">
@@ -78,7 +72,7 @@ const searchQuery = urlSearch.getAll("q")
         </div>
 
         <div className="flex items-center gap-7">
-          <div className="relative  flex justify-center">
+          <div className="relative flex justify-center">
             {user?.data?._id && (
               <div
                 className="text-3xl cursor-pointer relative flex justify-center"
@@ -96,10 +90,8 @@ const searchQuery = urlSearch.getAll("q")
               </div>
             )}
 
-            {/* Menu Option */}
-
             {menuDisplay && (
-              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded ">
+              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
                 <nav>
                   {user?.data?.role === ROLE.ADMIN && (
                     <Link
@@ -110,20 +102,23 @@ const searchQuery = urlSearch.getAll("q")
                       Admin Panel
                     </Link>
                   )}
-                  <Link to={"/order"} 
-                   className="whitespace-nowrap hidden md:block hover:text-red-500"
-                   onClick={() => setMenuDisplay((prev) => !prev)}
-                   >Order</Link>
+                  <Link
+                    to={"/order"}
+                    className="whitespace-nowrap hidden md:block hover:text-red-500"
+                    onClick={() => setMenuDisplay((prev) => !prev)}
+                  >
+                    Order
+                  </Link>
                 </nav>
               </div>
             )}
           </div>
+
           {user?.data?._id && (
             <Link to={"cart"} className="text-2xl relative">
               <span>
                 <FaShoppingCart />
               </span>
-
               <div className="bg-red-600 text-white w-5 h-5 p-1 flex items-center justify-center rounded-full absolute -top-2 -right-3">
                 <p className="text-xs">{context?.cartProductCount}</p>
               </div>

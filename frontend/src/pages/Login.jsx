@@ -3,8 +3,8 @@ import loginIcons from "../assest/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../common/api"; // Importing the centralized api client
 import Context from "../context";
 
 const Login = () => {
@@ -14,12 +14,11 @@ const Login = () => {
     password: "",
   });
 
-  const navigate = useNavigate()
-  const {fetchUserDetails,fetchUserAddToCart} = useContext(Context)
+  const navigate = useNavigate();
+  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-
     setData((prev) => {
       return {
         ...prev,
@@ -31,20 +30,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/signin",
-        data,
-        { withCredentials: true,
-          headers: { "Content-Type": "application/json" 
-         },
-        
-        }
-      );
-      toast(response.data.message);
-      navigate("/")
-      fetchUserDetails()
-      fetchUserAddToCart()
-      
+      const response = await api.post("/signin", data); // Using the centralized API client
+
+      const token = response.data.token;
+
+      if (token) {
+        localStorage.setItem("authToken", token); // Store the token in local storage
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
+        toast(response.data.message);
+        navigate("/");
+
+        fetchUserDetails();
+        fetchUserAddToCart();
+      }
     } catch (error) {
       toast(error.response?.data?.message || "An unexpected error occurred.");
     }

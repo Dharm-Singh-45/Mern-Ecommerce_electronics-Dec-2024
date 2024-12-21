@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../common/api"; // Importing the centralized API client
 import moment from "moment";
 import displayINRCurrency from "../helpers/displayCurrency";
 
@@ -8,12 +8,7 @@ const OrderPage = () => {
 
   const fetchOrderDetails = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/order-list", {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await api.get("/order-list"); // Using the centralized API client
 
       setData(response?.data?.data);
     } catch (error) {
@@ -24,15 +19,16 @@ const OrderPage = () => {
   useEffect(() => {
     fetchOrderDetails();
   }, []);
+
   return (
-    <div className="p-4 w-full ">
+    <div className="p-4 w-full">
       {!data[0] && <p>No Order Available</p>}
 
       <div>
         {data.map((item, index) => {
           return (
-            <div key={`${index} + order `}>
-              <p className="font-medium tetx-lg">
+            <div key={`${index} + order`}>
+              <p className="font-medium text-lg">
                 {moment(item.createdAt).format("LL")}
               </p>
 
@@ -43,7 +39,7 @@ const OrderPage = () => {
                       return (
                         <div
                           key={index + "product"}
-                          className="flex gap-3 bg-slate-100 "
+                          className="flex gap-3 bg-slate-100"
                         >
                           <img
                             src={product.image[0]}
@@ -69,9 +65,7 @@ const OrderPage = () => {
 
                   <div className="flex flex-col gap-4 p-2 min-w-[300px]">
                     <div>
-                      <div className="text-lg font-medium">
-                        Payment Details :
-                      </div>
+                      <div className="text-lg font-medium">Payment Details :</div>
                       <p className="m ml-2">
                         Payment Method :{" "}
                         {item.paymentDetails.payment_method_type[0]}
@@ -86,7 +80,7 @@ const OrderPage = () => {
                       </div>
                       {item.shipping_options.map((shipping, index) => {
                         return (
-                          <div className="ml-2">
+                          <div className="ml-2" key={index}>
                             Shipping Amount :{" "}
                             {displayINRCurrency(shipping.shipping_amount)}
                           </div>

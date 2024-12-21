@@ -4,8 +4,9 @@ import { FaEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ImageToBase64 from "../helpers/ImageToBase64";
-import axios from "axios";
-import {toast} from 'react-toastify'
+import api from "../common/api"; // Import the centralized API client
+import { toast } from 'react-toastify';
+
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -16,7 +17,7 @@ const SignUp = () => {
     confirmPassword: "",
     profilePic: "",
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +33,6 @@ const SignUp = () => {
   const handleUploadPic = async (e) => {
     const file = e.target.files[0];
     const imagePic = await ImageToBase64(file);
- 
-
 
     setData((prev) => {
       return {
@@ -47,29 +46,22 @@ const SignUp = () => {
     e.preventDefault();
     if (data.password === data.confirmPassword) {
       try {
-        const response = await axios.post(
-          "http://localhost:8080/api/signup",
-          data,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        // console.log(response.data.message)
-        toast(response.data.message)
-        navigate('/login')
+        // Use the centralized API client to send data
+        const response = await api.post("/signup", data);
+        toast(response?.data?.message);
+        navigate("/login");
       } catch (error) {
-       
-        toast(error.response?.data?.message || "An unexpected error occurred.")
-    
+        toast(error.response?.data?.message || "An unexpected error occurred.");
       }
-    } else{
-      toast('password and confirm password must be same')
+    } else {
+      toast("Password and confirm password must be the same.");
     }
   };
+
   return (
     <section id="signup">
       <div className="mx-auto container p-4">
-        <div className="bg-white p-5 w-full max-w-sm mx-auto rounded ">
+        <div className="bg-white p-5 w-full max-w-sm mx-auto rounded">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
             <div>
               <img src={data.profilePic || loginIcons} alt="login icon" />
@@ -160,8 +152,8 @@ const SignUp = () => {
             </button>
           </form>
           <p className="my-5">
-            Alredy have account ?{" "}
-            <Link to={"/login"} className="hover:text-red-700">
+            Already have an account?{" "}
+            <Link to="/login" className="hover:text-red-700">
               Login
             </Link>
           </p>

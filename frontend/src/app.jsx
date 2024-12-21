@@ -4,13 +4,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Context from "./context";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { setUserDetails } from "./store/userSlice";
 import { useDispatch } from "react-redux";
+import api from "./common/api"
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -19,20 +19,16 @@ function AppContent() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/user-details", {
-        withCredentials: true,
-      });
+      const response = await api.get("/user-details");
       dispatch(setUserDetails(response.data));
     } catch (error) {
-      toast.error()
+      toast.error(error.response?.data?.message || "Failed to fetch user details.");
     }
   };
 
   const fetchUserAddToCart = async() =>{
     try {
-      const response = await axios.get("http://localhost:8080/api/countAddToProduct",{
-        withCredentials:true
-      })
+      const response = await api.get("/countAddToProduct")
 
       // console.log("response",response.data.data.count)
       setCartProductCount(response?.data?.data?.count)

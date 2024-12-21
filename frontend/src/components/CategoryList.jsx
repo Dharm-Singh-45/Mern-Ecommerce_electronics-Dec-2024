@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../common/api"; // Import the centralized axios instance
 import { Link } from "react-router-dom";
 
 const CategoryList = () => {
@@ -12,14 +12,12 @@ const CategoryList = () => {
   const fetchCategoryProduct = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/get-categoryProduct"
-      );
-
+      const response = await api.get("/get-categoryProduct"); // Use the centralized api instance
       setLoading(false);
       setCategoryProduct(response.data.data);
     } catch (error) {
-      toast(error?.response?.data?.message);
+      toast(error?.response?.data?.message || "Something went wrong");
+      setLoading(false);
     }
   };
 
@@ -33,7 +31,7 @@ const CategoryList = () => {
         {loading ? (
           categoryLoading.map((el, index) => (
             <div
-              key={"categoryLoading"+index}
+              key={"categoryLoading" + index}
               className="h-16 w-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-slate-200 animate-pulse"
             ></div>
           ))
@@ -42,7 +40,7 @@ const CategoryList = () => {
             <Link
               to={`product-category?category=${product?.category}`}
               className="cursor-pointer"
-              key={"productCategory"+index}
+              key={"productCategory" + index}
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden p-4 bg-slate-200 flex items-center justify-center">
                 <img

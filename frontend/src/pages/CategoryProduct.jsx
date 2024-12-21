@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import productCategory from "../helpers/productCategory";
-import axios from "axios";
+import api from "../common/api"; // Import your centralized API client
 import VerticleCard from "../components/VerticleCard";
 import { toast } from "react-toastify";
 
@@ -27,25 +27,20 @@ const CategoryProduct = () => {
 
   const [sortBy, setSortBy] = useState("");
 
+  // Use centralized API client (api) to fetch data
   const fetchData = async () => {
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/filter",
-        {
-          category: filterCategoryList,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await api.post("/filter", {
+        category: filterCategoryList,
+      });
+  
       setData(response?.data?.data || []);
+      setLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      console.log("error from category product page");
+      setLoading(false);
+      toast.error(error?.response?.data?.message || "Error fetching products");
+      console.log("Error from category product page:", error);
     }
   };
 
@@ -95,6 +90,7 @@ const CategoryProduct = () => {
       setData((prev) => prev.sort((a, b) => b.sellingPrice - a.sellingPrice));
     }
   };
+
   useEffect(() => {}, [sortBy]);
 
   return (
@@ -134,7 +130,7 @@ const CategoryProduct = () => {
             </form>
           </div>
 
-          {/* filter by by */}
+          {/* filter by */}
           <div className="">
             <h3 className="text-base uppercase font-medium text-slate-500 border-slate-300 border-b pb-2">
               Category

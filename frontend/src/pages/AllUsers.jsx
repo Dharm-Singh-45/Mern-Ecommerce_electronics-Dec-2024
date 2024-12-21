@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MdModeEdit } from "react-icons/md";
 import ChangeUSerRole from "../components/ChangeUSerRole";
+import api from "../common/api"; // Import the centralized api instance
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
@@ -16,11 +16,8 @@ const AllUsers = () => {
 
   const fetchAllUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/all-users", {
-        withCredentials: true,
-      });
-
-      setAllUsers(response.data.data); // Ensure this is an array
+      const response = await api.get("/all-users", { withCredentials: true });
+      setAllUsers(response?.data?.data || []); // Ensure this is an array
     } catch (error) {
       toast(error?.response?.data?.message || "Failed to fetch users");
     }

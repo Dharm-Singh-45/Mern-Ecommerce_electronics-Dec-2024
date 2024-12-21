@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 const authToken = (req, res, next) => {
   try {
     // Retrieve token from cookies or headers
-    const token = req.cookies?.token || req.headers?.authorization?.split(' ')[1];
+    const authHeader = req.headers?.authorization
 
-    if (!token) {
+    if (!authHeader ||  !authHeader.startsWith('Bearer')){
       return res.status(401).json({
         message: 'Please Login First',
         error: true,
@@ -13,7 +13,7 @@ const authToken = (req, res, next) => {
         data: [],
       });
     }
-
+    const token = authHeader.split(' ')[1];
     // Verify token
     jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
       if (err) {

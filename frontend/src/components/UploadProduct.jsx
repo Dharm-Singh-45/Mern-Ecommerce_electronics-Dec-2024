@@ -5,10 +5,10 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import uploadImage from "../helpers/uploadImage";
 import DisplayImage from "./DisplayImage";
 import { MdDelete } from "react-icons/md";
-import axios from "axios";
-import {toast} from 'react-toastify'
+import api from "../common/api"; // Import the centralized api instance
+import { toast } from "react-toastify";
 
-const UploadProduct = ({ onClose,fetchData }) => {
+const UploadProduct = ({ onClose, fetchData }) => {
   const [data, setData] = useState({
     productName: "",
     brandName: "",
@@ -34,7 +34,6 @@ const UploadProduct = ({ onClose,fetchData }) => {
 
   const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
-
     const uploadImageCloudinary = await uploadImage(file);
 
     setData((prev) => {
@@ -61,24 +60,13 @@ const UploadProduct = ({ onClose,fetchData }) => {
   const handelSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/upload-product",
-      data,
-      {withCredentials:true,
-        headers:{
-          "Content-Type": "application/json"
-        }
-      })
-      
-
-      toast(response?.data?.message)
-      onClose()
-      fetchData()
+      const response = await api.post("/upload-product", data); // Use the centralized api instance
+      toast(response?.data?.message);
+      onClose();
+      fetchData();
     } catch (error) {
-      toast(error?.response?.data?.message ||  "An unexpected error occurred.")
-      
+      toast(error?.response?.data?.message || "An unexpected error occurred.");
     }
-
-
   };
 
   return (
@@ -231,7 +219,6 @@ const UploadProduct = ({ onClose,fetchData }) => {
             onChange={handleOnChnage}
             required
           >
-            
           </textarea>
 
           <button className="px3 py-2 bg-red-500 text-white mb-10 hover:bg-red-700 ">
